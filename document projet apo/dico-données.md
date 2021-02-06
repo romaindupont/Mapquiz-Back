@@ -7,14 +7,14 @@
 |id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|L'identifiant de notre question|
 |question|VARCHAR(128)|NOT NULL|La question|
 |picture|VARCHAR(128)|NULL|Photo pour la question|
-|reponse1|VARCHAR(128)|NOT NULL|la reponse n°1|
-|reponse2|VARCHAR(128)|NOT NULL|la reponse n°2|
-|reponse3|VARCHAR(128)|NOT NULL|la reponse n°3|
-|reponse4|VARCHAR(128)|NOT NULL|la reponse n°4|
+|answers1|VARCHAR(128)|NOT NULL|la reponse n°1|
+|answers2|VARCHAR(128)|NOT NULL|la reponse n°2|
+|answers3|VARCHAR(128)|NOT NULL|la reponse n°3|
+|answers4|VARCHAR(128)|NOT NULL|la reponse n°4|
 |created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|date de création de la question|
 |updated_at|TIMESTAMP|NULL|La date de la dernière mise à jour du produit|
 |category|entity|NOT NULL|La catégorie de la question|
-
+|difficulty|entity|NOT NULL|La difficulté de la question|
 
 ## Responses (`responses`)
 |Champ|Type|Spécificités|Description|
@@ -26,7 +26,7 @@
 
 ## Liaison Q/R
 |id_question|INT|NOT NULL|l'id de notre question|
-|id_response|INT|NOT NULL|l'id de notre reponse|
+|id_response|INT|NOT NULL|l'id de la bonne reponse|
 
 ## Category
 |Champ|Type|Spécificités|Description|
