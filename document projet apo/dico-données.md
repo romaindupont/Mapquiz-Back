@@ -8,9 +8,13 @@
 |question|VARCHAR(128)|NOT NULL|La question|
 |picture|VARCHAR(128)|NULL|Photo pour la question|
 |answers1|VARCHAR(128)|NOT NULL|la reponse n°1|
+|imgAnswers1|VARCHAR(128)|NOT NULL|une image pour la réponse n°1|
 |answers2|VARCHAR(128)|NOT NULL|la reponse n°2|
+|imgAnswers2|VARCHAR(128)|NOT NULL|une image pour la réponse n°2|
 |answers3|VARCHAR(128)|NOT NULL|la reponse n°3|
+|imgAnswers3|VARCHAR(128)|NOT NULL|une image pour la réponse n°3|
 |answers4|VARCHAR(128)|NOT NULL|la reponse n°4|
+|imgAnswers4|VARCHAR(128)|NOT NULL|une image pour la réponse n°4|
 |created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|date de création de la question|
 |updated_at|TIMESTAMP|NULL|La date de la dernière mise à jour du produit|
 |category|entity|NOT NULL|La catégorie de la question|
