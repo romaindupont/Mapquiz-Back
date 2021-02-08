@@ -1,53 +1,76 @@
-# Dictionnaire de données
+# Data dictionary
 
-## Questions (`questions`)
+## Questions
 
-|Champ|Type|Spécificités|Description|
+|Field|Type|Specificity|Description|
 |-|-|-|-|
-|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|L'identifiant de notre question|
-|question|VARCHAR(128)|NOT NULL|La question|
-|picture|VARCHAR(128)|NULL|Photo pour la question|
-|answers1|VARCHAR(128)|NOT NULL|la reponse n°1|
-|imgAnswers1|VARCHAR(128)|NOT NULL|une image pour la réponse n°1|
-|answers2|VARCHAR(128)|NOT NULL|la reponse n°2|
-|imgAnswers2|VARCHAR(128)|NOT NULL|une image pour la réponse n°2|
-|answers3|VARCHAR(128)|NOT NULL|la reponse n°3|
-|imgAnswers3|VARCHAR(128)|NOT NULL|une image pour la réponse n°3|
-|answers4|VARCHAR(128)|NOT NULL|la reponse n°4|
-|imgAnswers4|VARCHAR(128)|NOT NULL|une image pour la réponse n°4|
-|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|date de création de la question|
-|updated_at|TIMESTAMP|NULL|La date de la dernière mise à jour du produit|
-|category|entity|NOT NULL|La catégorie de la question|
-|difficulty|entity|NOT NULL|La difficulté de la question|
+|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|Question ID|
+|question|VARCHAR(128)|NOT NULL|Question|
+|picture|VARCHAR(128)|NULL|Question picture URL|
+|id_proposition|INT, Foreign_KEY, UNSIGNED|NOT NULL|Proposition ID|
+|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|Creation date|
+|updated_at|TIMESTAMP|NULL|Question update date|
+|id_category|INT|NOT NULL|id of categories questions|
+|id_difficulty|INT|NOT NULL|id of questions difficulty |
+|answer|VARCHAR(64)|NOT NULL|true answers|
+|trivia|VARCHAR(64)|NOT NULL|description of the answers|
 
-## Responses (`responses`)
-|Champ|Type|Spécificités|Description|
+## Propositions 
+|Field|Type|Specificity|Description|
 |-|-|-|-|
 |id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|L'identifiant de notre reponse|
-|name|VARCHAR(128)|NOT NULL|la reponse|
-|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|date de création de la question|
-|updated_at|TIMESTAMP|NULL|La date de la dernière mise à jour du produit|
-
-## Liaison Q/R
-|id_question|INT|NOT NULL|l'id de notre question|
-|id_response|INT|NOT NULL|l'id de la bonne reponse|
+|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|creation date|
+|updated_at|TIMESTAMP|NULL|update date|
+|answers1|VARCHAR(128)|NOT NULL|Answer 1|
+|pictureAnswers1|VARCHAR(128)|NOT NULL|Answer 1 picture URL|
+|answers2|VARCHAR(128)|NOT NULL|Answer 2|
+|pictureAnswers2|VARCHAR(128)|NOT NULL|Answer 2 picture URL|
+|answers3|VARCHAR(128)|NOT NULL|Answer 3|
+|pictureAnswers3|VARCHAR(128)|NOT NULL|Answer 3 picture URL|
+|answers4|VARCHAR(128)|NOT NULL|Answer 4|
+|pictureAnswers4|VARCHAR(128)|NOT NULL|Answer 4 picture URL|
 
 ## Category
-|Champ|Type|Spécificités|Description|
+|Field|Type|Specificity|Description|
 |-|-|-|-|
-|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|L'identifiant de la categorie|
-|name|VARCHAR(64)|NOT NULL|Le nom de la category|
-|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|date de création de la question|
-|updated_at|TIMESTAMP|NULL|La date de la dernière mise à jour du produit|
+|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|Category ID|
+|name|VARCHAR(64)|NOT NULL|Category name|
+|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|Creation date|
+|updated_at|TIMESTAMP|NULL|update date|
+
+## Difficulty
+|Field|Type|Specificity|Description|
+|-|-|-|-|
+|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|Difficulty ID|
+|name|VARCHAR(64)|NOT NULL|Difficulty name|
+|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|creation date|
+|updated_at|TIMESTAMP|NULL|update date|
 
 ## users
-|Champ|Type|Spécificités|Description|
+|Field|Type|Specificity|Description|
 |-|-|-|-|
-|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|L'identifiant du joueur|
-|pseudo|VARCHAR(64)|NOT NULL|le pseudo du joueur|
-|email|VARCHAR(64)|NOT NULL|l'email du joueur|
-|password|VARCHAR(64)|NOT NULL|le password du joueur|
-|points|INT|NOT NULL|le nombre de point cumulé|
-|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|date de création de la question|
-|updated_at|TIMESTAMP|NULL|La date de la dernière mise à jour du produit|
-|avatar|VARCHAR(128)|NULL|l'avatar du joueur|
+|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|User ID|
+|nickname|VARCHAR(64)|NOT NULL|User nickname|
+|email|VARCHAR(64)|NOT NULL|User email|
+|password|VARCHAR(64)|NOT NULL|User password|
+|created_at|TIMESTAMP|NOT NULL DEFAULT CURRENT_TIMESTAMP|creation date|
+|updated_at|TIMESTAMP|NULL|update date|
+|avatar|VARCHAR(128)|NULL|User avatar|
+
+----
+### Attention V2 
+
+## trophy
+|Field|Type|Specificity|Description|
+|-|-|-|-|
+|id|INT|PRIMARY KEY, NOT NULL, AUTO_INCREMENT, UNSIGNED|Trophy ID|
+|name|VARCHAR(64)|NOT NULL|trophy name|
+|description|VARCHAR(128)|NOT NULL|trophy description|
+|picture|VARCHAR(128)|NOT NULL|trophy picture URL|
+
+
+## link trophy/user
+|Field|Type|Specificity|Description|
+|-|-|-|-|
+|id_trophy|INT|NOT NULL|id of trophy|
+|id_user|INT|NOT NULL|id of user|
