@@ -7,31 +7,41 @@ const pool = new Pool({
   port: 5432,
 });
 console.log('connexion db ok');
+const bcrypt = require('bcrypt')
 
 const getUsers = (body) => {
     const sql = 'SELECT * FROM users WHERE email=$1';
     return new Promise(function(resolve, reject) {
       const {email}=body;
-      console.log(email)
+      //console.log(email)
       pool.query(sql,[email], (error, results) => {
         if (error) {
           reject(error)
         }
-        console.log(results.rows);
+        //console.log(results.rows);
         resolve(results.rows[0]);
       })
     }) 
   }
-
+  async function serialize(password) {
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(password,saltRounds)
+    return hash;
+  }
 
 //const { name, nickname, email, avatar, level, created_at } = body;
 const createUsers = (body) => { 
+  console.log('je suis dans create user')
   const sql = 'INSERT INTO users(password, email, nickname, id_avatar, level, created_at) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
   const aujourdhui = 'now()';
-return new Promise(function(resolve, reject) {
+return new Promise( async function(resolve, reject) {
+  console.log('je passe dans la promesse')
     const { password, nickname, email, id_avatar} = body;
-    pool.query(sql,[password, email, nickname, id_avatar, 0, aujourdhui], (error, results) => {
+    const hashPassword = await serialize(password);
+    console.log(hashPassword);
+    pool.query(sql,[hashPassword, email, nickname, id_avatar, 0, aujourdhui], (error, results) => {
         if (error) {
+          console.log('j\'ai une erreur')
           reject(error)
         }
         console.log('je suis la');
