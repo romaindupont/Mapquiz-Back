@@ -51,16 +51,15 @@ return new Promise( async function(resolve, reject) {
     })
   }
 const signIn = (body) => {
-console.log('passage par searchUsers')
-const sql1='SELECT * FROM users WHERE email=$1 AND password=$2'
+const sql1='SELECT * FROM users WHERE email=$1';
 return new Promise(function(resolve, reject) {
-  const {password, email}= body;
-  pool.query(sql1,[email, password], (error, results) => {
+  const {email, password}= body;
+  pool.query(sql1,[email], (error, results) => {
     if (error) {
       console.log('acces refusée')
       reject(error)
     }
-    console.log(results.rows[0]);
+    //console.log(results.rows[0]);
     resolve(results.rows[0]);
   })
 })
