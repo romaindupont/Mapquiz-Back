@@ -22,7 +22,8 @@ const getUsers = (body) => {
         resolve(results.rows[0]);
       })
     }) 
-  }
+  };
+  
   async function serialize(password) {
     const saltRounds = 10;
     const hash = await bcrypt.hash(password,saltRounds)
