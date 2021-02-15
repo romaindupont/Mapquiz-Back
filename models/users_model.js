@@ -13,12 +13,10 @@ const getUsers = (body) => {
     const sql = 'SELECT * FROM users WHERE email=$1';
     return new Promise(function(resolve, reject) {
       const {email}=body;
-      //console.log(email)
       pool.query(sql,[email], (error, results) => {
         if (error) {
           reject(error)
         }
-        //console.log(results.rows);
         resolve(results.rows[0]);
       })
     }) 
@@ -32,55 +30,52 @@ const getUsers = (body) => {
 
 //const { name, nickname, email, avatar, level, created_at } = body;
 const createUsers = (body) => { 
-  console.log('je suis dans create user')
   const sql = 'INSERT INTO users(password, email, nickname, id_avatar, level, created_at) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
   const aujourdhui = 'now()';
 return new Promise( async function(resolve, reject) {
-  console.log('je passe dans la promesse')
     const { password, nickname, email, id_avatar} = body;
     const hashPassword = await serialize(password);
-    console.log(hashPassword);
     pool.query(sql,[hashPassword, email, nickname, id_avatar, 0, aujourdhui], (error, results) => {
         if (error) {
-          console.log('j\'ai une erreur')
           reject(error)
         }
-        console.log('je suis la');
         resolve(results.rows[0])
       })
     })
-  }
-const signIn = (body) => {
-const sql1='SELECT * FROM users WHERE email=$1';
-return new Promise(function(resolve, reject) {
-  const {email, password}= body;
-  pool.query(sql1,[email], (error, results) => {
-    if (error) {
-      console.log('acces refusée')
-      reject(error)
-    }
-    //console.log(results.rows[0]);
-    resolve(results.rows[0]);
-  })
-})
-}
+  };
+
 const SearchUsers = (body) => {
-  console.log('passage par searchUsers')
   const sql1='SELECT * FROM users WHERE email=$1 AND password=$2'
   return new Promise(function(resolve, reject) {
     const {password, email}= body;
     pool.query(sql1,[email, password], (error, results) => {
       if (error) {
-        console.log('acces refusée')
         reject(error)
       }
-      console.log(results.rows[0]);
       resolve(results.rows[0]);
     })
   })
-}
+};
+
+
+const removeUser = (id_user) => {
+  const sql = 'DELETE FROM users WHERE id=$1';
+  return new Promise(function(resolve, reject) {
+    //const {id_user} = params;
+    console.log(id_user)
+    pool.query(sql,[id_user], (error, results) => {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      console.log('ok compte fermé')
+      resolve(results.rows[0]);
+    })
+  })
+};
 module.exports = {
     getUsers,
     createUsers,
     SearchUsers,
+    removeUser,
   }
