@@ -78,7 +78,6 @@ const changeInfoOnUser =(body,id_user) => {
   const sql = 'UPDATE users SET password=$1, email=$2, nickname=$3, id_avatar=$4, updated_at=$5 WHERE id=$6';
   const aujourdhui = 'now()';
   return new Promise(async function(resolve, reject) {
-    //const {id_user} = params;
     const {password, email,nickname,id_avatar}=body;
     const hashPassword = await serialize(password);
     console.log(id_user)
@@ -93,7 +92,18 @@ const changeInfoOnUser =(body,id_user) => {
   })
 };
 
+const InfoUsers = (id_user) => {
+  const sql = "SELECT row_to_json(use) as user FROM (SELECT id, email, nickname, level, (SELECT json_agg(avat) FROM ( SELECT id, name, picture FROM avatars WHERE id = a.id_avatar) avat)AS avatars FROM users as a WHERE id=$1) use;";
+  return new Promise(async function(resolve, reject) {
+    pool.query(sql,[id_user], (error, results) => {
+      if (error) {
+        reject(error)
+      }
+      resolve(results.rows[0]);
+    })
+  })
 
+};
 
 
 module.exports = {
@@ -102,4 +112,5 @@ module.exports = {
     SearchUsers,
     removeUser,
     changeInfoOnUser,
+    InfoUsers,
   }
