@@ -15,7 +15,6 @@ const getQuestion = () => {
         if (error) {
           reject(error)
         }
-        //console.log(results.rows);
         resolve(results.rows);
       })
     }) 
@@ -29,7 +28,6 @@ const getQuestion = () => {
         if (error) {
           reject(error)
         }
-        //console.log(results.rows);
         resolve(results.rows);
       })
     }) 
@@ -42,7 +40,6 @@ const getQuestion = () => {
         if (error) {
           reject(error)
         }
-        //console.log(results.rows);
         resolve(results.rows);
       })
     }) 
