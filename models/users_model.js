@@ -73,9 +73,33 @@ const removeUser = (id_user) => {
     })
   })
 };
+
+const changeInfoOnUser =(body,id_user) => {
+  const sql = 'UPDATE users SET password=$1, email=$2, nickname=$3, id_avatar=$4, updated_at=$5 WHERE id=$6';
+  const aujourdhui = 'now()';
+  return new Promise(async function(resolve, reject) {
+    //const {id_user} = params;
+    const {password, email,nickname,id_avatar}=body;
+    const hashPassword = await serialize(password);
+    console.log(id_user)
+    pool.query(sql,[hashPassword,email,nickname,id_avatar,aujourdhui,id_user], (error, results) => {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      console.log('ok compte maj')
+      resolve(results.rows[0]);
+    })
+  })
+};
+
+
+
+
 module.exports = {
     getUsers,
     createUsers,
     SearchUsers,
     removeUser,
+    changeInfoOnUser,
   }
