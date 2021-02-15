@@ -68,7 +68,6 @@ const removeUser = (id_user) => {
         console.log(error)
         reject(error)
       }
-      console.log('ok compte fermé')
       resolve(results.rows[0]);
     })
   })
@@ -86,7 +85,6 @@ const changeInfoOnUser =(body,id_user) => {
         console.log(error)
         reject(error)
       }
-      console.log('ok compte maj')
       resolve(results.rows[0]);
     })
   })
