@@ -105,6 +105,18 @@ const InfoUsers = (id_user) => {
 
 };
 
+const changeLevel = (id_user, level) => {
+  const sql = "UPDATE users SET level=$1 WHERE id=$2;";
+  return new Promise(async function(resolve, reject) {
+    pool.query(sql,[level, id_user], (error, results) => {
+      if (error) {
+        reject(error)
+      }
+      resolve(results.rows[0]);
+    })
+  })
+
+};
 
 module.exports = {
     getUsers,
@@ -113,4 +125,5 @@ module.exports = {
     removeUser,
     changeInfoOnUser,
     InfoUsers,
+    changeLevel,
   }
