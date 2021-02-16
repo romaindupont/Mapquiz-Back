@@ -1,12 +1,13 @@
+const dotenv = require('dotenv');
 const Pool = require('pg').Pool
+dotenv.config();
 const pool = new Pool({
-  user: 'romain',
-  host: 'localhost',
-  database: 'mapquiz',
-  password: 'Adelteam23#',
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT,
 });
-console.log('connexion db ok');
 
 const getAvatar = () => {
 
