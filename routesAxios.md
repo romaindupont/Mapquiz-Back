@@ -26,15 +26,7 @@ const ajax = (store) => (next) => (action) => {
       break;
     case DO_TROPHIES:
       const { id_user } = store.getState();
-      axios.get('/trophieserror);
-} 
-});  
-
-/**
- * ADMIN ROUTER
- */
-app.post('/admin', async (req,res)=> {
-  try {/', {
+      axios.get('/trophies/', {
         params: {
           id_user,
         },
