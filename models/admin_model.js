@@ -35,7 +35,6 @@ const addQuestion = (body) => {
     })
   })
 };
-
 const addAnswers = (body, newId) => {
  console.log(newId)
  const answers = body.map((currentAnswers)=>{return currentAnswers })
