@@ -13,6 +13,7 @@ const AdminConnection = ({login, email, password,changeField, logging}) => {
     <>
       <Menu />
       {console.log(logging)}
+      {!logging ? (
       <main>
           <form className="form" onSubmit={handleSubmit}>
             <Field 
@@ -32,6 +33,10 @@ const AdminConnection = ({login, email, password,changeField, logging}) => {
           <button className="form-connect" type="submit">Connection</button>
         </form>
       </main>
+      ):(
+        <div>connecte</div>
+        
+      )}
     </>
  
   );

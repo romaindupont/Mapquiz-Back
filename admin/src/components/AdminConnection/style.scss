@@ -1,3 +1,6 @@
+body {
+  cursor: url('../../assets/images/cursor.png'), pointer;
+}
 .navbar{
   margin: 0 auto;
   display: flex;
@@ -57,6 +60,7 @@
 main {
   margin: 0 auto;
   display: flex;
+
 }
 .form {
   flex-direction: row;
@@ -75,6 +79,7 @@ main {
     text-transform: uppercase;
     cursor: pointer;
 
+    
     &:hover {
       transform: translateY(3px);
       box-shadow: 0px 7px#16a085;
