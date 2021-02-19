@@ -4,7 +4,8 @@
   "description": "test back",
   "main": "index.js",
   "engines": {
-    "yarn": "1.22.0"
+    "yarn": "1.22.0",
+    "node": "14.15.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
