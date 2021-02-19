@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "test back",
   "main": "index.js",
+  "engines": {
+    "yarn": "1.22.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
