@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
  */
 app.get('/category/:id', async (req, res) => {
   //console.log(req.params.id)
-  await question_model.question.getSpecificQuestion(req.params.id)
+  await question_model.dataQuestion.getSpecificQuestion(req.params.id)
    .then(response => {
       res.status(201).send(response);
   })
@@ -46,7 +46,7 @@ app.get('/category/:id', async (req, res) => {
  */
 app.get('/avatars', async (req, res) => {
   try {
-    const avatarsList = await avatars_model.getAvatar()
+    const avatarsList = await avatars_model.dataAvatar.getAvatar()
     return res.status(201).json({
       avatarsList,
       logging: false,   
@@ -61,9 +61,9 @@ app.get('/avatars', async (req, res) => {
 */
 app.get('/trophies/:id_user', auth.authorizationConnection, async (req, res) => {
   try {
-    const userInfo = await users_model.InfoUsers(req.params.id_user);
+    const userInfo = await users_model.dataUser.InfoUsers(req.params.id_user);
     const {user} = userInfo;
-    const myTrophies = await trophies_model.getTrophies(user.level);
+    const myTrophies = await trophies_model.dataTrophies.getTrophies(user.level);
     return res.status(201).json({
       myTrophies,
       logging: true   
@@ -79,10 +79,10 @@ app.get('/trophies/:id_user', auth.authorizationConnection, async (req, res) => 
 */
 app.patch('/level/:id_user', auth.authorizationConnection, async (req, res) => {
   try {
-    const userInfo = await users_model.InfoUsers(req.params.id_user);
+    const userInfo = await users_model.dataUser.InfoUsers(req.params.id_user);
     const {user} = userInfo;
     const userLevel = user.level +1;
-    const addLevelOnUser = await users_model.changeLevel(req.params.id_user,userLevel);
+    const addLevelOnUser = await users_model.dataUser.changeLevel(req.params.id_user,userLevel);
     return res.status(201).json({
       message: "Nouveau Niveau obtenu",
       logging: true   
@@ -99,14 +99,14 @@ app.patch('/level/:id_user', auth.authorizationConnection, async (req, res) => {
  */
 app.post('/user/:id_user', auth.authorizationConnection, async (req, res) => {
   try {
-    const testUser = await users_model.getUsers(req.body)
+    const testUser = await users_model.dataUser.getUsers(req.body)
     if (testUser === undefined) {
       return res.status(401).json({
         logging: false,
         message: "Vous devez vous connecter"
       });
     } else {
-      const userInfo = await users_model.InfoUsers(req.params.id_user)
+      const userInfo = await users_model.dataUser.InfoUsers(req.params.id_user)
       return res.status(201).json({
         userInfo,
         logging: true,
@@ -126,7 +126,7 @@ app.post('/user/:id_user', auth.authorizationConnection, async (req, res) => {
  */
 app.put('/update/:id_user', auth.authorizationConnection, async (req, res) => {
   try {
-    const testUser = await users_model.getUsers(req.body)
+    const testUser = await users_model.dataUser.getUsers(req.body)
     if (testUser === undefined) {
       return res.status(401).json({
         logging: false,
@@ -135,7 +135,7 @@ app.put('/update/:id_user', auth.authorizationConnection, async (req, res) => {
     } 
     if (req.body.password === req.body.password2){
       const id_user = req.params.id_user
-      const updateUsers = await users_model.changeInfoOnUser(req.body,id_user);
+      const updateUsers = await users_model.dataUser.changeInfoOnUser(req.body,id_user);
       res.status(201).json({
         logging: true,
         message: "Vos infos ont été mise à jour"
@@ -152,7 +152,7 @@ app.put('/update/:id_user', auth.authorizationConnection, async (req, res) => {
  */
  app.post('/signin', async (req, res) => {
   try {
-    const testUser = await users_model.getUsers(req.body);
+    const testUser = await users_model.dataUser.getUsers(req.body);
     if (testUser === undefined) {
       return res.status(401).json({
         logging: false,
@@ -203,13 +203,13 @@ app.post('/signout', (req, res) => {
  */
 app.delete('/remove/:id_user', auth.authorizationConnection, async (req, res) => {
   try {
-    const testUser = await users_model.getUsers(req.body);
+    const testUser = await users_model.dataUser.getUsers(req.body);
     const {password}=testUser;
     if(testUser !== undefined) {
       await bcrypt.compare(req.body.password, password, async function(err,result) {
         if(result){
           const id_user = req.params.id_user
-          await users_model.removeUser(id_user);
+          await users_model.dataUser.removeUser(id_user);
             return res.status(201).json({
               logging: false,
               message: "Votre compte n\'existe plus"
@@ -234,7 +234,7 @@ app.delete('/remove/:id_user', auth.authorizationConnection, async (req, res) =>
  */
 app.post('/subscribe', async (req, res) => {
    try {
-    const testUser = await users_model.getUsers(req.body);
+    const testUser = await users_model.dataUser.getUsers(req.body);
     if (testUser !== undefined) {
       return res.status(401).json({
         logging: false,
@@ -242,7 +242,7 @@ app.post('/subscribe', async (req, res) => {
       });
     } 
     if (req.body.password === req.body.password2){
-    const newUsers = await users_model.createUsers(req.body);
+    const newUsers = await users_model.dataUser.createUsers(req.body);
     res.status(201).send(newUsers);
     }
     else {
@@ -303,10 +303,10 @@ app.post('/admin', async (req,res)=> {
  */
 app.get('/add/question', auth.authorizationConnection, async (req, res) => {
   try {
-    const findId = await question_model.question.lastId();
+    const findId = await question_model.dataQuestion.lastId();
     const newId = findId.max+1;
-    const addQuestion = await question_model.question.addQuestion(req.body.questions);
-    const addAnswers = await question_model.question.addAnswers(req.body.questions.answers, newId)
+    const addQuestion = await question_model.dataQuestion.addQuestion(req.body.questions);
+    const addAnswers = await question_model.dataQuestion.addAnswers(req.body.questions.answers, newId)
     return res.status(201).json({
       logging: true,
       message: "Votre question est enregistrée"

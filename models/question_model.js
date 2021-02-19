@@ -1,26 +1,31 @@
 const pool = require('../data/database');
-class Question {
+class Questions {
   id;
   question;
+  picture;
   difficulty;
-  category_name;
+  id_category;
   trivia;
+  created_at;
+  updated_at;
 
   constructor(obj) {
     this.id=obj.id;
     this.question=obj.question;
     this.difficulty=obj.difficulty;
-    this.category_name=obj.category_name;
+    this.id_category=obj.id_category;
     this.trivia=obj.trivia;
+    this.created_at=obj.created_at;
+    this.updated_at=obj.updated_at;
   }
 }
-const question = {
+const dataQuestion = {
   addQuestion: async (body) => {
     const sql = 'INSERT INTO questions(question, picture, difficulty,id_category,trivia,created_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
     const aujourdhui = 'now()';
     const { question, picture, difficulty,id_category,trivia } = body;
     const result = await pool.pool.query(sql,[question, picture, difficulty,id_category,trivia, aujourdhui]);
-    const questionAdd = new Question(result.rows[0]);
+    const questionAdd = new Questions(result.rows[0]);
     return questionAdd;
   },
   addAnswers: async (body, newId) => {
@@ -33,21 +38,21 @@ const question = {
      const sql =`INSERT INTO answers(label, is_correct, picture, id_question)SELECT label, is_correct, picture, id_question FROM json_populate_record(null::answers, ${variables})RETURNING *`;
      const aujourdhui = 'now()';
      const result = await pool.pool.query(sql);
-     const answersAdd = new Question(result.rows);
+     const answersAdd = new Questions(result.rows);
     }
   }
   },
   lastId: async () => {
     const sql ='SELECT MAX(id) FROM questions';
     const result = await pool.pool.query(sql);
-    const id = new Question(result.rows[0]);
+    const id = new Questions(result.rows[0]);
     return id;
   },
   getSpecificQuestion: async (params) => {
     const sql ="SELECT row_to_json(quest) as questions FROM (SELECT * ,(SELECT json_agg(alb) FROM ( SELECT * from answers WHERE id_question= a.id) alb)AS answers FROM questions as a WHERE id_category=$1 LIMIT 10 ) quest ORDER BY random();";
     const result = await pool.pool.query(sql,[params]);
     console.log(result.rows)
-    const ListOfQuestion = new Question(result.rows);
+    const ListOfQuestion = new Questions(result.rows);
     return result.rows;
   },
 };
@@ -77,5 +82,5 @@ const getReponse = () => {
 
 
 module.exports = {
-    question,
+  dataQuestion,
   }
