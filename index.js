@@ -30,9 +30,9 @@ app.get('/', (req, res) => {
 /**
  * request pour les questions en fonction du theme
  */
-app.get('/category/:id', (req, res) => {
-  console.log(req.params.id)
-  question_model.getSpecificQuestion(req.params.id)
+app.get('/category/:id', async (req, res) => {
+  //console.log(req.params.id)
+  await question_model.question.getSpecificQuestion(req.params.id)
    .then(response => {
       res.status(201).send(response);
   })
@@ -262,7 +262,8 @@ app.post('/subscribe', async (req, res) => {
  */
 app.post('/admin', async (req,res)=> {
   try {
-    const testUser = await admin_model.checkAdminAccount(req.body);
+    const testUser = await admin_model.admin.checkAdminAccount(req.body)
+    
     if (testUser === undefined) {
       return res.status(401).json({
         logging: false,
@@ -271,6 +272,7 @@ app.post('/admin', async (req,res)=> {
     }
     if (testUser !== undefined) {
       const {password, nickname, id}=testUser;
+      //console.log(testUser)
       const userVerificationPassword = await bcrypt.compare(req.body.password, password, function(err,result) {
         if(result) {
           const jwtContent = {userId: id };
@@ -301,10 +303,10 @@ app.post('/admin', async (req,res)=> {
  */
 app.get('/add/question', auth.authorizationConnection, async (req, res) => {
   try {
-    const findId = await admin_model.lastId();
+    const findId = await question_model.question.lastId();
     const newId = findId.max+1;
-    const addQuestion = await admin_model.addQuestion(req.body.questions);
-    const addAnswers = await admin_model.addAnswers(req.body.questions.answers, newId)
+    const addQuestion = await question_model.question.addQuestion(req.body.questions);
+    const addAnswers = await question_model.question.addAnswers(req.body.questions.answers, newId)
     return res.status(201).json({
       logging: true,
       message: "Votre question est enregistrée"
