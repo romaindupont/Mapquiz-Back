@@ -21,6 +21,10 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.send('hello world');
+});
+
 /**
  * request pour les questions en fonction du theme
  */
