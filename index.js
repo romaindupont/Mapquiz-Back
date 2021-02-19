@@ -315,6 +315,7 @@ app.use((err, req, res, next) => {
     res.status(401).send('Invalid token');
   }
 });
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`)
+app.listen(process.env.PORT || 5000, () => {
+  //console.log(`App running on port ${port}.`)
+  console.log(`App running on port`)
 })
