@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3001
+const cors = require('cors')
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -14,6 +15,7 @@ const auth = require('./middlewares/auth')
 const bcrypt = require('bcrypt')
 
 app.use(express.json())
+app.use(cors())
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
