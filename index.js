@@ -5,12 +5,12 @@ const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const users_model = require('../models/users_model')
-const question_model = require('../models/question_model')
-const avatars_model = require('../models/avatars_model')
-const trophies_model = require('../models/trophies_model')
-const admin_model = require('../models/admin_model')
-const auth = require('../middlewares/auth')
+const users_model = require('./models/users_model')
+const question_model = require('./models/question_model')
+const avatars_model = require('./models/avatars_model')
+const trophies_model = require('./models/trophies_model')
+const admin_model = require('./models/admin_model')
+const auth = require('./middlewares/auth')
 const bcrypt = require('bcrypt')
 
 app.use(express.json())

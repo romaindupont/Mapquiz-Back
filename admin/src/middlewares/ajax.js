@@ -17,7 +17,7 @@ const ajax = (store) => (next) => (action) => {
           // je veux memoriser le pseudo de l'utilsateur connecté
           store.dispatch(saveUser(response.data.pseudo, response.data.token));
           axios.defaults.headers.common.Authorization = `bearer ${response.data.token}`;
-          //alert(response.data.message)
+          alert(response.data.message)
         })
         .catch((error) => {
           console.error('Error', error);
