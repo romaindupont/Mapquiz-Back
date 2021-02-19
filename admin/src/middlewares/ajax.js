@@ -13,9 +13,11 @@ const ajax = (store) => (next) => (action) => {
         baseURL: 'http://localhost:3001',
       })
         .then((response) => {
+          /* console.log(response) */
           // je veux memoriser le pseudo de l'utilsateur connecté
           store.dispatch(saveUser(response.data.pseudo, response.data.token));
           axios.defaults.headers.common.Authorization = `bearer ${response.data.token}`;
+          //alert(response.data.message)
         })
         .catch((error) => {
           console.error('Error', error);
