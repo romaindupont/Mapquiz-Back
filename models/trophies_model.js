@@ -25,6 +25,9 @@ const dataTrophies = {
     const trophy = new Trophies (result.rows);
     return trophy;
   },
+  createTrophies: async () => {},
+  deleteTrophies: async () => {},
+  updateTrophies: async () => {},
 };
 
 module.exports = {

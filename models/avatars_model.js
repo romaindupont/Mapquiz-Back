@@ -22,6 +22,9 @@ const dataAvatar = {
     const avatar = new Avatars (results.rows);
     return avatar;
   },
+  createAvatar: async () => {},
+  deleteAvatar: async () => {},
+  updateAvatar: async () => {},
 };
 
 module.exports = {

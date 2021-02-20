@@ -11,6 +11,8 @@ const question_model = require('./models/question_model')
 const avatars_model = require('./models/avatars_model')
 const trophies_model = require('./models/trophies_model')
 const admin_model = require('./models/admin_model')
+const answers_model = require('./models/answers_model')
+const categories_model = require('./models/categories_model')
 const auth = require('./middlewares/auth')
 const bcrypt = require('bcrypt')
 
@@ -262,7 +264,7 @@ app.post('/subscribe', async (req, res) => {
  */
 app.post('/admin', async (req,res)=> {
   try {
-    const testUser = await admin_model.admin.checkAdminAccount(req.body)
+    const testUser = await users_model.dataUser.checkAdminAccount(req.body)
     
     if (testUser === undefined) {
       return res.status(401).json({
@@ -306,7 +308,7 @@ app.get('/add/question', auth.authorizationConnection, async (req, res) => {
     const findId = await question_model.dataQuestion.lastId();
     const newId = findId.max+1;
     const addQuestion = await question_model.dataQuestion.addQuestion(req.body.questions);
-    const addAnswers = await question_model.dataQuestion.addAnswers(req.body.questions.answers, newId)
+    const addAnswers = await answers_model.dataAnswers.addAnswers(req.body.questions.answers, newId)
     return res.status(201).json({
       logging: true,
       message: "Votre question est enregistrée"

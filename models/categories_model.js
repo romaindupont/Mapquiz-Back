@@ -12,3 +12,10 @@ class Categories {
     this.updated_at=obj.updated_at;
   }
 };
+
+const dataCategories = {
+  getCategories: async () => {},
+  createdCategorie: async () => {},
+  deleteCategories: async () => {},
+  updateCategories: async () => {},
+}

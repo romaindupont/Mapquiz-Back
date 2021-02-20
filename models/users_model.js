@@ -12,6 +12,7 @@ class Users {
   nickname;
   id_avatar;
   level;
+  isadmin
   created_at;
   updated_at;
 
@@ -22,6 +23,7 @@ class Users {
     this.nickname=obj.nickname;
     this.id_avatar=obj.id_avatar;
     this.level=obj.level;
+    this.isadmin=obj.isadmin;
     this.created_at=obj.created_at;
     this.updated_at=obj.updated_at;
   }
@@ -40,13 +42,6 @@ const dataUser = {
     const { password, nickname, email, id_avatar} = body;
     const hashPassword = await serialize(password);
     const result = await pool.pool.query(sql,[hashPassword, email, nickname, id_avatar, 0, aujourdhui]);
-    const user = new Users (result.rows[0]);
-    return user;
-  },
-  SearchUsers: async (body) => {
-    const sql='SELECT * FROM users WHERE email=$1 AND password=$2';
-    const {password, email}= body;
-    const result = await pool.pool.query(sql,[email, password]);
     const user = new Users (result.rows[0]);
     return user;
   },
@@ -77,6 +72,13 @@ const dataUser = {
     const user = new Users (result.rows[0]);
     return user;
   },
+  checkAdminAccount: async (body) => {
+    const sql = 'SELECT * FROM users WHERE email=$1 AND isadmin=true';
+    const {email}=body;
+    const result = await pool.pool.query(sql,[email]);
+    const check = new Check(result.rows[0]);
+    return check;
+  }  
 };
 
 module.exports = {
