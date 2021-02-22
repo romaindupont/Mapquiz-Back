@@ -50,7 +50,6 @@ const signController = {
   subscribe:async (req, res) => {
     try {
      const testUser = await users_model.dataUser.getUsers(req.body);
-     console.log(req.body)
      if (testUser !== undefined) {
        return res.status(401).json({
          logging: false,
@@ -59,7 +58,7 @@ const signController = {
      } 
      if (req.body.password === req.body.password2){
      const newUsers = await users_model.dataUser.createUsers(req.body);
-     res.status(201).send(newUsers);
+     return res.status(201).send(newUsers);
      }
      else {
        return res.status(401).json({

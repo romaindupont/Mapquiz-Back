@@ -25,7 +25,7 @@ const dataAnswers = {
     for (let i = 0; i <= answers.length; i++){
       if(answers[i]!== undefined){
      answers[i].id_question=newId;
-     let answer = answers[i]
+     let answer = answers[i];
      let variables = `'${JSON.stringify(answer)}'`;
      const sql =`INSERT INTO answers(label, is_correct, picture, id_question)SELECT label, is_correct, picture, id_question FROM json_populate_record(null::answers, ${variables})RETURNING *`;
      const aujourdhui = 'now()';

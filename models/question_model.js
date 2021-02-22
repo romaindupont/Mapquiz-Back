@@ -31,7 +31,7 @@ const dataQuestion = {
   lastId: async () => {
     const sql ='SELECT MAX(id) FROM questions';
     const result = await pool.pool.query(sql);
-    const id = new Questions(result.rows[0]);
+    const id = result.rows[0];
     return id;
   },
   getSpecificQuestion: async (params) => {
