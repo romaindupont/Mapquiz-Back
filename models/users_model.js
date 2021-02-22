@@ -33,22 +33,21 @@ const dataUser = {
     const sql = 'SELECT * FROM users WHERE email=$1';
     const {email}=body;
     const result = await pool.pool.query(sql,[email]);
-    const user = new Users (result.rows[0]);
-    return user;
+    return result.rows[0];
   },
   createUsers: async (body) => {
-    const sql = 'INSERT INTO users(password, email, nickname, id_avatar, level, created_at) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
+    const sql = 'INSERT INTO users(password, email, nickname, id_avatar, level,isadmin, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *';
     const aujourdhui = 'now()';
     const { password, nickname, email, id_avatar} = body;
+    console.log(body)
     const hashPassword = await serialize(password);
-    const result = await pool.pool.query(sql,[hashPassword, email, nickname, id_avatar, 0, aujourdhui]);
-    const user = new Users (result.rows[0]);
-    return user;
+    const result = await pool.pool.query(sql,[hashPassword, email, nickname, id_avatar, 0,"f", aujourdhui]);
+    return result.rows[0];
   },
   removeUser: async (id_user) => {
     const sql = 'DELETE FROM users WHERE id=$1';
     const result = await pool.pool.query(sql,[id_user]);
-    const user = new Users (result.rows[0]);
+    const user = result.rows[0];
     return user;
   },
   changeInfoOnUser: async (body,id_user) => {
@@ -56,27 +55,26 @@ const dataUser = {
     const aujourdhui = 'now()';
     const {password, email,nickname,id_avatar}=body;
     const hashPassword = await serialize(password);
-    const result = pool.pool.query(sql,[hashPassword,email,nickname,id_avatar,aujourdhui,id_user]);
-    const user = new Users (result.rows[0]);
+    const result = await pool.pool.query(sql,[hashPassword,email,nickname,id_avatar,aujourdhui,id_user]);
+    const user = result.rows[0];
     return user;
   },
   InfoUsers: async(id_user) => {
   const sql = "SELECT row_to_json(use) as user FROM (SELECT id, email, nickname, level, (SELECT json_agg(avat) FROM ( SELECT id, name, picture FROM avatars WHERE id = a.id_avatar) avat)AS avatars FROM users as a WHERE id=$1) use;";
-  const result = pool.pool.query(sql,[id_user]);
-  const user = new Users (result.rows[0]);
+  const result = await pool.pool.query(sql,[id_user]);
+  const user = result.rows;
     return user;
   },
   changeLevel: async (id_user, level) => {
     const sql = "UPDATE users SET level=$1 WHERE id=$2;";
-    const result = pool.pool.query(sql,[level, id_user]);
-    const user = new Users (result.rows[0]);
-    return user;
+    const result = await pool.pool.query(sql,[level, id_user]);
+    return result.rows[0];
   },
   checkAdminAccount: async (body) => {
     const sql = 'SELECT * FROM users WHERE email=$1 AND isadmin=true';
     const {email}=body;
     const result = await pool.pool.query(sql,[email]);
-    const check = new Check(result.rows[0]);
+    const check = result.rows[0];
     return check;
   }  
 };

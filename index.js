@@ -1,26 +1,20 @@
 const express = require('express')
 const app = express()
-const port = 3001
 const cors = require('cors')
-const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const users_model = require('./models/users_model')
-const question_model = require('./models/question_model')
-const avatars_model = require('./models/avatars_model')
-const trophies_model = require('./models/trophies_model')
-const admin_model = require('./models/admin_model')
-const answers_model = require('./models/answers_model')
-const categories_model = require('./models/categories_model')
-const auth = require('./middlewares/auth')
-const bcrypt = require('bcrypt')
+const userRouter = require('./routers/user');
+const signRouter = require('./routers/sign');
+const questionRouter = require('./routers/question');
+const avatarRouter = require('./routers/avatar');
+const adminRouter = require('./routers/admin');
 
 app.use(express.json())
 app.use(cors())
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
   next();
 });
@@ -29,295 +23,12 @@ app.get('/', (req, res) => {
   res.send('hello world');
 });
 
-/**
- * request pour les questions en fonction du theme
- */
-app.get('/category/:id', async (req, res) => {
-  //console.log(req.params.id)
-  await question_model.dataQuestion.getSpecificQuestion(req.params.id)
-   .then(response => {
-      res.status(201).send(response);
-  })
-  .catch(error => {
-    res.status(500).send(error);
-  })
-}) ;
+app.use('/user', userRouter);
+app.use('/', signRouter);
+app.use('/question', questionRouter);
+app.use('/', avatarRouter);
+app.use('/', adminRouter);
 
-/**
- * Chargement des avatars
- */
-app.get('/avatars', async (req, res) => {
-  try {
-    const avatarsList = await avatars_model.dataAvatar.getAvatar()
-    return res.status(201).json({
-      avatarsList,
-      logging: false,   
-    });
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-});
-/**
- * get trophies for specific user
-*/
-app.get('/trophies/:id_user', auth.authorizationConnection, async (req, res) => {
-  try {
-    const userInfo = await users_model.dataUser.InfoUsers(req.params.id_user);
-    const {user} = userInfo;
-    const myTrophies = await trophies_model.dataTrophies.getTrophies(user.level);
-    return res.status(201).json({
-      myTrophies,
-      logging: true   
-    });
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-
-});
-/**
- * update level of the user
-*/
-app.patch('/level/:id_user', auth.authorizationConnection, async (req, res) => {
-  try {
-    const userInfo = await users_model.dataUser.InfoUsers(req.params.id_user);
-    const {user} = userInfo;
-    const userLevel = user.level +1;
-    const addLevelOnUser = await users_model.dataUser.changeLevel(req.params.id_user,userLevel);
-    return res.status(201).json({
-      message: "Nouveau Niveau obtenu",
-      logging: true   
-    });
-  } 
-  catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-});
-
-/**
- * Obtenir des infos sur l'utilisateur en fx de son id
- */
-app.post('/user/:id_user', auth.authorizationConnection, async (req, res) => {
-  try {
-    const testUser = await users_model.dataUser.getUsers(req.body)
-    if (testUser === undefined) {
-      return res.status(401).json({
-        logging: false,
-        message: "Vous devez vous connecter"
-      });
-    } else {
-      const userInfo = await users_model.dataUser.InfoUsers(req.params.id_user)
-      return res.status(201).json({
-        userInfo,
-        logging: true,
-      
-      });
-    }
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-
-  });
-
-
-/**
- * MAJ des infos utilisateurs
- */
-app.put('/update/:id_user', auth.authorizationConnection, async (req, res) => {
-  try {
-    const testUser = await users_model.dataUser.getUsers(req.body)
-    if (testUser === undefined) {
-      return res.status(401).json({
-        logging: false,
-        message: "Vous devez vous connecter"
-      });
-    } 
-    if (req.body.password === req.body.password2){
-      const id_user = req.params.id_user
-      const updateUsers = await users_model.dataUser.changeInfoOnUser(req.body,id_user);
-      res.status(201).json({
-        logging: true,
-        message: "Vos infos ont été mise à jour"
-      });
-    };
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-    
-  }
-});
-/**
- * Se connecter sur son compte
- */
- app.post('/signin', async (req, res) => {
-  try {
-    const testUser = await users_model.dataUser.getUsers(req.body);
-    if (testUser === undefined) {
-      return res.status(401).json({
-        logging: false,
-        message: "Votre compte n\'existe pas"            
-      });
-    }
-    if (testUser !== undefined) {
-      const {password, nickname, id}=testUser;
-      const userVerificationPassword = await bcrypt.compare(req.body.password, password, function(err,result) {
-        if(result) {
-          const jwtContent = {userId: id };
-          const jwtOptions = {
-            algorithm: 'HS256',
-            expiresIn: '1h'
-          };
-          return res.status(201).json({
-            logging: true,
-            nickname: nickname,
-            token: jsonwebtoken.sign(jwtContent, process.env.TOKEN_SECRET, jwtOptions)
-
-          });
-        } else {
-          return res.status(401).json({
-            logging: true,
-            message: "Votre mot de passe n\'est pas bon, veuillez ressayer"            
-          });
-        }
-      });
-    } 
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-
-});
-/**
- * Deconnexion au compte user
- */
-app.post('/signout', (req, res) => {
-  return res.status(201).json({
-    logging: false,
-    message: "Deconnexion réussie, A bientôt"
-  })
-}); 
-
-/**
- * Supprimer son compte user
- */
-app.delete('/remove/:id_user', auth.authorizationConnection, async (req, res) => {
-  try {
-    const testUser = await users_model.dataUser.getUsers(req.body);
-    const {password}=testUser;
-    if(testUser !== undefined) {
-      await bcrypt.compare(req.body.password, password, async function(err,result) {
-        if(result){
-          const id_user = req.params.id_user
-          await users_model.dataUser.removeUser(id_user);
-            return res.status(201).json({
-              logging: false,
-              message: "Votre compte n\'existe plus"
-            });
-        }
-        else {
-          return res.status(401).json({
-            logging: true,
-            message: "Votre mot de passe n\'est pas bon, veuillez ressayer"
-          });
-        }
-      });
-    } 
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-});
-
-/**
- * Inscription
- */
-app.post('/subscribe', async (req, res) => {
-   try {
-    const testUser = await users_model.dataUser.getUsers(req.body);
-    if (testUser !== undefined) {
-      return res.status(401).json({
-        logging: false,
-        message: "Vous avez déjà un compte"
-      });
-    } 
-    if (req.body.password === req.body.password2){
-    const newUsers = await users_model.dataUser.createUsers(req.body);
-    res.status(201).send(newUsers);
-    }
-    else {
-      return res.status(401).json({
-        logging: false,
-        message: "Vos mots de passe ne sont pas identiques"
-      });
-    }
-} catch (error) {
-  console.log(error)
-  res.status(500).send(error);
-} 
-});  
-
-/**
- * ADMIN ROUTER
- */
-app.post('/admin', async (req,res)=> {
-  try {
-    const testUser = await users_model.dataUser.checkAdminAccount(req.body)
-    
-    if (testUser === undefined) {
-      return res.status(401).json({
-        logging: false,
-        message: "Vous ne passerez pas"            
-      });
-    }
-    if (testUser !== undefined) {
-      const {password, nickname, id}=testUser;
-      //console.log(testUser)
-      const userVerificationPassword = await bcrypt.compare(req.body.password, password, function(err,result) {
-        if(result) {
-          const jwtContent = {userId: id };
-          const jwtOptions = {
-            algorithm: 'HS256',
-            expiresIn: '1h'
-          };
-          return res.status(201).json({
-            logging: true,
-            nickname: nickname,
-            token: jsonwebtoken.sign(jwtContent, process.env.TOKEN_SECRET, jwtOptions)
-          });
-        } else {
-          return res.status(401).json({
-            logging: true,
-            message: "Votre mot de passe n\'est pas bon, veuillez ressayer"            
-          });
-        }
-      });
-    } 
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-});
-/**
- * Add question
- */
-app.get('/add/question', auth.authorizationConnection, async (req, res) => {
-  try {
-    const findId = await question_model.dataQuestion.lastId();
-    const newId = findId.max+1;
-    const addQuestion = await question_model.dataQuestion.addQuestion(req.body.questions);
-    const addAnswers = await answers_model.dataAnswers.addAnswers(req.body.questions.answers, newId)
-    return res.status(201).json({
-      logging: true,
-      message: "Votre question est enregistrée"
-    });
-  } catch (error) {
-    console.log(error)
-    res.status(500).send(error);
-  }
-})
 // Error middleware
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {

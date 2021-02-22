@@ -37,7 +37,6 @@ const dataQuestion = {
   getSpecificQuestion: async (params) => {
     const sql ="SELECT row_to_json(quest) as questions FROM (SELECT * ,(SELECT json_agg(alb) FROM ( SELECT * from answers WHERE id_question= a.id) alb)AS answers FROM questions as a WHERE id_category=$1 LIMIT 10 ) quest ORDER BY random();";
     const result = await pool.pool.query(sql,[params]);
-    console.log(result.rows)
     return result.rows;
   },
   getQuestion: async () => {
@@ -46,23 +45,20 @@ const dataQuestion = {
     const ListOfQuestion = new Questions(result.rows);
     return ListOfQuestion;
   },
-  deleteQuestion: async () => {},
-  updateQuestion: async () => {},
+  deleteQuestion: async (id_question) => {
+    const sql = 'DELETE FROM questions WHERE id=$1';
+    const result = await pool.pool.query(sql, [id_question]);
+    return result.rows;
+  },
+  updateQuestion: async (body, id_question) => {
+    const sql = 'UPDATE questions SET question=$1, difficulty=$2, picture=$3, id_category=$4,trivia=$5, updated_at=$6 WHERE id=$7';
+    const aujourdhui = 'now()';
+    const { question, picture, difficulty,id_category,trivia } = body;
+    const result = await pool.pool.query(sql, [question, picture, difficulty,id_category,trivia, aujourdhui,id_question]);
+    return result.rows;
+  },
 
 };
-
-/* const getReponse = () => {
-  const sql ="SELECT row_to_json(quest) as questions FROM (SELECT * ,(SELECT json_agg(alb) FROM ( SELECT * from answers WHERE id_question= a.id) alb)AS answers FROM questions as a) quest;"
-  return new Promise(function(resolve, reject) {
-    pool.pool.query(sql, (error, results) => {
-      if (error) {
-        reject(error)
-      }
-      resolve(results.rows);
-    })
-  }) 
-}; */
-
 
 module.exports = {
   dataQuestion,

@@ -20,7 +20,6 @@ const admin = {
     const {email}=body;
     const result = await pool.pool.query(sql,[email]);
     const check = new Check(result.rows[0]);
-    //console.log(check)
     return check;
   }  
 };
