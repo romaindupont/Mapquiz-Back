@@ -10,7 +10,7 @@ const ajax = (store) => (next) => (action) => {
         email,
         password,
       }, {
-        baseURL: 'http://localhost:3001',
+        baseURL: "https://mapquizbackend.herokuapp.com" || "http://localhost:3001",
       })
         .then((response) => {
           /* console.log(response) */
