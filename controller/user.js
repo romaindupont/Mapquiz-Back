@@ -6,8 +6,8 @@ const userController = {
 
   remove:  async (req, res) => {   
     try {
-      console.log(testUser)
       const testUser = await users_model.dataUser.getUsers(req.body);
+      console.log(testUser)
       if(testUser !== undefined) {
         const {password}=testUser;
         await bcrypt.compare(req.body.password, password, async function(err,result) {
