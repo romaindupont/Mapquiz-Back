@@ -23,6 +23,7 @@ const signController = {
               expiresIn: '1h'
             };
             return res.status(201).json({
+              id_user: id,
               logging: true,
               nickname: nickname,
               token: jsonwebtoken.sign(jwtContent, process.env.TOKEN_SECRET, jwtOptions)
