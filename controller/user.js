@@ -6,6 +6,7 @@ const userController = {
 
   remove:  async (req, res) => {   
     try {
+      console.log(testUser)
       const testUser = await users_model.dataUser.getUsers(req.body);
       if(testUser !== undefined) {
         const {password}=testUser;
