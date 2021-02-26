@@ -14,7 +14,7 @@ const signController = {
         });
       }
       if (testUser !== undefined) {
-        const {password, nickname, id}=testUser;
+        const {password, nickname, id, id_avatar}=testUser;
         const userVerificationPassword = await bcrypt.compare(req.body.password, password, function(err,result) {
           if(result) {
             const jwtContent = {userId: id };
@@ -26,6 +26,7 @@ const signController = {
               id_user: id,
               logging: true,
               nickname: nickname,
+              id_avatar: id_avatar,
               token: jsonwebtoken.sign(jwtContent, process.env.TOKEN_SECRET, jwtOptions)
   
             });

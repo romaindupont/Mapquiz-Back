@@ -3,11 +3,10 @@ const trophies_model = require('../models/trophies_model');
 const bcrypt = require('bcrypt');
 
 const userController = {
-
   remove:  async (req, res) => {   
     try {
       const testUser = await users_model.dataUser.getUsers(req.body);
-      console.log(testUser)
+      console.log(req.body)
       if(testUser !== undefined) {
         const {password}=testUser;
         await bcrypt.compare(req.body.password, password, async function(err,result) {
@@ -89,7 +88,8 @@ const userController = {
       await users_model.dataUser.changeLevel(req.params.id_user,userLevel);
       return res.status(201).json({
         message: "Nouveau Niveau obtenu",
-        logging: true   
+        logging: true,
+        level: userLevel  
       });
     })
     } 
